@@ -4,7 +4,7 @@
 
 Biocraftlab’s Elder Fire STL contains 1,285,002 triangles in 86 disconnected shells. [prepare-elder-fire.py](../scripts/prepare-elder-fire.py) verifies the source hash, simplifies each shell separately, and groups ten axial sections and their decorations into seven centred meshes. The result retains 120,106 triangles across about 6 MB of STL files. Coordinates change from Z-up to Y-up and are scaled by 0.052. The component mapping, anchors, and offsets are specific to this model.
 
-The rigid groups are head, shoulders and wings, torso, hind legs, tail base, tail middle, and tail tip. Wings stay fixed in their printed pose, avoiding a new wing rig. Six spherical joints join them. The neck permits roughly ±69° of twist and a 66° swing cone; its local twist axis is aligned with world up in the initial pose.
+The rigid groups are head, shoulders and wings, torso, hind legs, tail base, tail middle, and tail tip. Every wing panel and hinge pin is explicitly assigned to the shoulders. Wings stay fixed in their printed pose, avoiding a new wing rig. Six spherical joints join them. The neck permits roughly ±69° of twist and a 66° swing cone; its local twist axis is aligned with world up in the initial pose.
 
 Rendered meshes and collision shapes serve different purposes. Compact convex proxies handle ground contact. Separate zero-density wing hulls provide floor contact without giving the broad wings an oversized torso mass. Additional zero-density compound hulls enclose the head and the feet so those parts can collide without adding mass. Collision masks disable other self-collision pairs so the printed interlocking joints do not jam.
 

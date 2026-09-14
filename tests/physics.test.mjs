@@ -27,6 +27,23 @@ test("hosted model is bounded, licensed and contains seven verified meshes", () 
   assert.equal(triangles, manifest.triangles);
   assert.ok(bytes < 7500000, "prepared STL payload stays below 7.5 MB");
 });
+test("all outer wing geometry moves with the shoulders, never with the head", () => {
+  let leftWingVertices = 0, rightWingVertices = 0;
+  for (const [index, part] of manifest.parts.entries()) {
+    const data = readFileSync(new URL(`../public/models/elder-fire/${part.file}`, import.meta.url));
+    for (let face = 0; face < data.readUInt32LE(80); face++) {
+      for (let vertex = 0; vertex < 3; vertex++) {
+        const lateral = data.readFloatLE(84 + face * 50 + 12 + vertex * 12 + 8) + part.center[2];
+        // All four feet and axial sections fit inside +/-2 scene units.
+        // Anything outside is wing geometry and must share its rigid transform.
+        if (Math.abs(lateral) <= 2) continue;
+        assert.equal(index, 1, `wing vertex assigned to ${part.name}`);
+        if (lateral < 0) leftWingVertices++; else rightWingVertices++;
+      }
+    }
+  }
+  assert.ok(leftWingVertices > 10000 && rightWingVertices > 10000, "both outer wings are present");
+});
 test("Box3D joints remain attached through rest, flight, steering, drop, reset", async () => {
   const sim = await createSimulation(manifest);
   const checkJoints = () =>

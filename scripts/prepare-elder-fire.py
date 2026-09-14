@@ -19,6 +19,14 @@ BODY_GROUPS = [0, 1, 1, 2, 3, 4, 4, 5, 5, 6]
 NAMES = ['Head', 'Shoulders & wings', 'Torso', 'Hind legs', 'Tail base', 'Tail middle', 'Tail tip']
 SLUGS = ['head', 'shoulders-wings', 'torso', 'hind-legs', 'tail-base', 'tail-middle', 'tail-tip']
 FOOT_SHELLS = {9: 1, 10: 1, 7: 3, 8: 3}
+# Reviewed on the source component map. The leading panels (33/34) extend
+# ahead of the shoulder region: a position cutoff misassigns them to the head.
+# Include the small hinge pins and stray wing-surface triangles as well.
+WING_SHELLS = {
+    0, 1, 16, 17, 22, 23, 25, 26, 29, 30, 33, 34, 35, 36,
+    41, 42, 43, 44, 45, 46, 49, 50, 51, 52, 55, 56, 57, 58, 59, 60,
+    78, 79, 80, 81, 82, 83, 84, 85,
+}
 
 def convert(vertices):
     v = np.asarray(vertices)
@@ -76,22 +84,19 @@ def main():
     groups = [[] for _ in range(7)]
     owners = {}
     base_owners = dict(zip(BODY_SHELLS, BODY_GROUPS))
-    wing_shells = []
+    wing_shells = sorted(WING_SHELLS)
     simplified = {}
     for index, shell in enumerate(shells):
         if index in base_owners:
             owner = base_owners[index]
         elif index in FOOT_SHELLS:
             owner = FOOT_SHELLS[index]
+        elif index in WING_SHELLS:
+            owner = 1
         else:
-            center = shell.bounds.mean(axis=0)
-            if abs(center[0]) > 10 and -15 < center[1] < 64:
-                owner = 1
-                wing_shells.append(index)
-            else:
-                sample = shell.vertices[::max(1, len(shell.vertices) // 200)]
-                distance = [np.median(tree.query(sample)[0]) for tree in trees]
-                owner = BODY_GROUPS[int(np.argmin(distance))]
+            sample = shell.vertices[::max(1, len(shell.vertices) // 200)]
+            distance = [np.median(tree.query(sample)[0]) for tree in trees]
+            owner = BODY_GROUPS[int(np.argmin(distance))]
         owners[index] = owner
         target = min(len(shell.faces), max(24, round(args.triangles * len(shell.faces) / len(mesh.faces))))
         part = shell.simplify_quadric_decimation(face_count=target) if target < len(shell.faces) else shell.copy()

@@ -98,7 +98,7 @@ async function start() {
     );
   }
   scene.add(rings);
-  const response = await fetch(`${import.meta.env.BASE_URL}models/elder-fire/dragon.json`);
+  const response = await fetch(`${import.meta.env.BASE_URL}models/elder-fire/dragon.json`, { cache: "no-cache" });
   if (!response.ok) throw new Error("The dragon could not load. Refresh the page to try again.");
   const manifest = await response.json();
   const finishDefaults = {
@@ -146,7 +146,7 @@ async function start() {
   const loader = new STLLoader();
   const meshes = await Promise.all(
     manifest.parts.map(async (p) => {
-      const raw = await loader.loadAsync(`${import.meta.env.BASE_URL}models/elder-fire/${p.file}`);
+      const raw = await loader.loadAsync(`${import.meta.env.BASE_URL}models/elder-fire/${p.file}?v=${p.sha256}`);
       raw.deleteAttribute("normal");
       const geometry = mergeVertices(raw, 1e-5);
       geometry.computeVertexNormals();

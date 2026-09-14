@@ -17,7 +17,7 @@ npm run build
 npm run preview
 ```
 
-The 11 tests run the actual Box3D WebAssembly engine. They check asset hashes and size, joint attachment, settling, takeoff, long autopilot flight, manual steering and idle handoff, symmetric neck travel, head/foot clearance, floor bumps, reset, and grabbing after distant or high flight. Browser checks additionally cover framing, materials, picking, help, and reset transitions.
+The 12 tests run the actual Box3D WebAssembly engine. They check asset hashes and size, complete wing grouping, joint attachment, settling, takeoff, long autopilot flight, manual steering and idle handoff, symmetric neck travel, head/foot clearance, floor bumps, reset, and grabbing after distant or high flight. Browser checks additionally cover framing, materials, picking, help, and reset transitions.
 
 Vite may warn about Box3D’s Node `module` import being externalized for browsers and about a JavaScript chunk over 500 kB. These are distinct from build failures.
 
