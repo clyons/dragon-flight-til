@@ -104,7 +104,7 @@ def main():
         # Keep the established mass/anchor reference independent of surface polish.
         collision_meshes[index] = part.copy()
         collision_meshes[index].vertices = convert(part.vertices)
-        if owner != 0 and index not in FOOT_SHELLS and len(part.faces) > 100:
+        if owner != 0 and len(part.faces) > 100:
             original = part.vertices.copy()
             trimesh.smoothing.filter_humphrey(part, alpha=.015, beta=.7, iterations=40)
             displacement = part.vertices - original
@@ -156,7 +156,7 @@ def main():
                     sourceSha256=hashlib.sha256(source_bytes).hexdigest(), sourceTriangles=len(mesh.faces),
                     triangles=sum(p['triangles'] for p in parts), scale=SCALE, parts=parts,
                     anchors=convert(anchors_source).tolist(),
-                    modifications='Simplified meshes, seven rigid groups, fixed wings, smoothed body and wing surfaces, transformed coordinates and approximate collision hulls.')
+                    modifications='Simplified meshes, seven rigid groups, fixed wings, smoothed body, wing and foot surfaces, transformed coordinates and approximate collision hulls.')
     (args.output / 'dragon.json').write_text(json.dumps(manifest, separators=(',', ':')) + '\n')
     print(json.dumps({'triangles':manifest['triangles'], 'stlBytes':sum((args.output / p['file']).stat().st_size for p in parts),
                       'parts':[{'name':p['name'],'triangles':p['triangles']} for p in parts]}, indent=2))

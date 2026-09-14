@@ -1,18 +1,18 @@
 # Sources and attribution
 
-## Playable dragon model
+## Playable dragon and current videos
 
 The hosted playground uses **Biocraftlab’s [Elder Fire Dragon – Flexi Toy Figure](https://www.printables.com/model/1385888-elder-fire-dragon-flexi-toy-figure)** under [Creative Commons Attribution–NonCommercial–ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/). The creator’s [listing PDF](https://media.printables.com/media/prints/1385888/pdfs/1385888-elder-fire-dragon-flexi-toy-figure-44d5651a-e864-41c7-89ef-9f5f70b9a84c.pdf) records that licence.
 
-The included adaptation reduces 1,285,002 triangles to 120,106, combines ten axial sections into seven rigid groups, fixes the wings to the shoulders, smooths the body and wing surface detail, transforms coordinates, and adds approximate collision hulls and anchors. These adapted meshes and collision data carry the same CC BY-NC-SA 4.0 licence; see the [asset notice](../public/models/elder-fire/LICENSE.md). Credit the creator, identify changes, retain the licence, and observe its noncommercial and share-alike terms when reusing them.
+The included adaptation reduces 1,285,002 triangles to 120,106, combines ten axial sections into seven rigid groups, fixes the wings to the shoulders, smooths the body, wing and foot surface detail, transforms coordinates, and adds approximate collision hulls and anchors. These adapted meshes and collision data carry the same CC BY-NC-SA 4.0 licence; see the [asset notice](../public/models/elder-fire/LICENSE.md). Credit the creator, identify changes, retain the licence, and observe its noncommercial and share-alike terms when reusing them.
 
-## Original video model
+## Original experiment model
 
-The historical videos show the [articulated dragon on MakerWorld, model 2735519, profile 3032774](https://makerworld.com/en/models/2735519-articulated-dragon#profileId-3032774). The reference download was named `danger+dragon.stl`.
+The original experiment used the [articulated dragon on MakerWorld, model 2735519, profile 3032774](https://makerworld.com/en/models/2735519-articulated-dragon#profileId-3032774). The reference download was named `danger+dragon.stl`.
 
 The model is by **jars_2003**. Its MakerWorld listing uses the Standard Digital File License; it is not a Creative Commons asset. The original STL, split meshes, and collision manifest are not redistributed in this repository or the Pages site. The current playable version uses the separately licensed Elder Fire model above.
 
-The included video and poster show this model as part of the Three.js/Box3D experiment and credit the creator. They do not grant a license to the underlying model or include downloadable geometry. The project claims no ownership of the dragon design.
+The current included videos and posters use Biocraftlab’s Elder Fire model, with the same CC BY-NC-SA 4.0 attribution and adaptation notice as the playable version. The original recording sources remain in `work/recording/` for historical reference; the current recorder is described in [the demo guide](demo.md). The project claims no ownership of either dragon design.
 
 ## Software and ideas
 

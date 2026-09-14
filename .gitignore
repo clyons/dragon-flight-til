@@ -11,3 +11,5 @@ public/models/*.json
 outputs/dragon-parts.png
 site/
 recordings/
+
+recording-preview/

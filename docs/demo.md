@@ -1,68 +1,62 @@
 # Feature tour
 
-[Play the current Elder Fire playground](https://clyons.github.io/dragon-flight-til/play/). The recordings below show the earlier jars_2003 model; see [attribution](attribution.md).
+[Play the Elder Fire playground](https://clyons.github.io/dragon-flight-til/play/) · [Watch portrait](https://clyons.github.io/dragon-flight-til/) · [Watch widescreen](https://clyons.github.io/dragon-flight-til/widescreen.html) · [Download MP4](../outputs/dragon-feature-tour.mp4)
 
-[Watch portrait](https://clyons.github.io/dragon-flight-til/) · [Watch widescreen](https://clyons.github.io/dragon-flight-til/widescreen.html) · [Download MP4](../outputs/dragon-feature-tour.mp4)
-
-Both editions: 31.4 seconds · H.264 · 30 fps · no audio. Portrait: 1080 × 1350 (4:5). Widescreen: 1920 × 906.
+Both editions: 34.5 seconds · H.264 · 30 fps · 1,035 frames · no audio. Portrait: 1080 × 1350 (4:5). Widescreen: 1920 × 906. The model is Biocraftlab’s Elder Fire Dragon, with the body, wings and feet smoothed; see [attribution](attribution.md).
 
 | Time | Feature |
 | --- | --- |
-| 00:00 | Head-led swoops and trailing tail; motion from the opening frames |
-| 00:09 | Left/right and upward head steering |
-| 00:14.8 | Pick up, shake, and wind up (2.5× playback) |
-| 00:18 | Throw and landing at normal speed |
-| 00:23 | Copper |
-| 00:25.5 | Obsidian |
-| 00:28 | Reset result, with the transition removed |
-| 00:29.4 | Closing attribution |
+| 00:00 | Head-led circle, already moving from the opening frame |
+| 00:04 | Figure eight |
+| 00:10 | Circle in the other direction |
+| 00:13 | Left, right and upward head steering |
+| 00:17 | Pick up, shake and wind up |
+| 00:19.7 | Throw stroke; release at 00:20.3, followed by landing |
+| 00:25.3 | Copper |
+| 00:28 | Obsidian |
+| 00:30.7 | Reset result, with the transition excluded |
+| 00:32.5 | Go for a spin |
 
-The edit skips the initial stillness, the return-to-autopilot sequence, the separate drop demonstration, and the extra return-to-Jade material segment. All reset animation frames are excluded, including the final reset transition. The shake is compressed; the flight, steering, throw, landing, and material views remain at normal speed. Both players link to each other and to the [published TIL](https://ciaranlyons.com/til/2026/09/13/teaching-a-printed-dragon-to-fly/).
+The edit skips stretches of autopilot between the three views, the return-to-autopilot countdown, and every reset transition. Each visible segment runs at normal simulation speed. Both players link to each other, the playable demo and the [published TIL](https://ciaranlyons.com/til/2026/09/13/teaching-a-printed-dragon-to-fly/).
 
 ## Recording method
 
-The video runs the real Three.js renderer and Box3D simulation. A recording-only timeline calls the same flight, steering, grab, material, and reset controllers. A 1080 × 1350 canvas combines the live scene with captions and controller status, and MediaRecorder captures that canvas. The entire frame shares one rendered background. An extended camera view preserves the dragon's framing without an inset colour seam. No browser chrome, desktop content, or audio enters this export.
+The video runs the real Three.js renderer and Box3D simulation. [The recorder builder](../work/recording/build-short-recorder.mjs) creates an isolated preview from the current app and the included licensed model. [The short timeline](../work/recording/short-tour.js) calls the existing flight, steering, grab, material and reset controllers. It advances a fixed clock at 30 frames per second and uses Chrome’s WebCodecs H.264 encoder. Rendering can run faster or slower than real time without changing video timing.
 
-The throw moves the existing grab handle through a short wind-up and a fast upward/sideways stroke. The spring transfers momentum to the dragon. Releasing removes the spring without assigning a launch velocity or adding an impulse. The camera follows the toss and landing.
+A canvas combines the rendered scene with the title, captions, control status and model credits. The entire frame shares the rendered background. No browser chrome, desktop content or audio enters the export.
 
-## Recreate the recording
+The throw moves the existing grab handle through a short wind-up and an upward/sideways stroke. The spring transfers momentum to the dragon. Releasing removes the spring without assigning a launch velocity or adding an impulse. The camera follows the toss and landing.
 
-Use a separate local clone for this historical recording setup. Install the JavaScript dependencies with `npm ci`, obtain the original jars_2003 model under its own terms, place it at `public/models/dragon.stl`, and run `scripts/prepare-dragon.py` using `requirements.txt`. The recorder below expects that original manifest and geometry; it does not use the included Elder Fire assets. The recording sources are in [work/recording](../work/recording/).
+## Recreate the recordings
 
-From that clone's root:
-
-```sh
-cp work/recording/main.js src/main.js
-cp work/recording/demo-grab.js src/demo-grab.js
-cp work/recording/style.css src/style.css
-cp work/recording/vite.config.js vite.config.js
-cp work/recording/export.html export.html
-npm run dev
-```
-
-Open http://127.0.0.1:4180/export.html in Chrome. This dedicated export entry starts the tour automatically after fonts load. Keep the tab visible for the full 72-second tour. The local endpoint writes `recordings/dragon-social-raw.webm`; the output folder is ignored by Git. Frame timing can differ slightly between runs.
-
-Convert the output with FFmpeg and strip metadata from the exported copy with ExifTool:
+From the repository root, with Node 22 or newer:
 
 ```sh
-ffmpeg -i recordings/dragon-social-raw.webm -vf "fps=30,select='not(between(n,1170,1184)+between(n,1650,1664))',setpts=N/(30*TB)" -c:v libx264 -preset medium -crf 19 -pix_fmt yuv420p -an -map_metadata -1 -movflags +faststart recordings/dragon-feature-tour.mp4
-exiftool -overwrite_original -all= recordings/dragon-feature-tour.mp4
-ffprobe -v error -show_format -show_streams recordings/dragon-feature-tour.mp4
+npm ci
+node work/recording/build-short-recorder.mjs
+npx vite --config work/recording/short-vite.config.js
 ```
 
-The command above produces the earlier 71-second portrait edit, which is the input for the short portrait cut. The original widescreen input is the 72-second take. Build the final edits from these half-open frame ranges at 30 fps:
+Open `http://127.0.0.1:4196/?format=portrait&both` in Chrome. It records portrait, saves it locally, then records widescreen. To export one format, use `?format=portrait` or `?format=widescreen`. Wait for “Saved widescreen demo” in the browser title. The local endpoint writes the H.264 streams and timing metadata to the ignored `recordings/` folder; `recording-preview/` is also ignored. No source files are overwritten.
 
-| Segment | Portrait input frames | Widescreen input frames | Playback speed |
-| --- | --- | --- | --- |
-| Flight | 93–363 | 93–363 | 1× |
-| Steering | 513–687 | 513–687 | 1× |
-| Grab and shake | 1218–1458 | 1233–1473 | 2.5× |
-| Throw and landing | 1458–1608 | 1473–1623 | 1× |
-| Copper | 1638–1713 | 1668–1743 | 1× |
-| Obsidian | 1743–1818 | 1773–1848 | 1× |
-| Reset result | 1968–2010 | 1998–2040 | 1× |
-| Closing attribution | 2043–2103 | 2073–2133 | 1× |
+Encode the raw streams into browser-ready MP4s with FFmpeg:
 
-For each range use FFmpeg `trim=start_frame=START:end_frame=END,setpts=(PTS-STARTPTS)/SPEED,fps=30`, then concatenate the segments. Encode H.264 with CRF 18, yuv420p, no audio, and faststart; strip metadata again. Each final video has 942 frames. These ranges match the reference takes; verify timing if recording again.
+```sh
+for format in portrait widescreen; do
+  ffmpeg -framerate 30 -i "recordings/elder-$format.h264" \
+    -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p \
+    -an -map_metadata -1 -movflags +faststart "recordings/elder-$format.mp4"
+done
+```
 
-Review the opening, every cut boundary, and the full throw before replacing the videos in `outputs/`. Run [the video site build](publishing.md) and check playback again. The original model remains by [jars_2003 on MakerWorld](https://makerworld.com/en/models/2735519-articulated-dragon#profileId-3032774); see [asset attribution](attribution.md).
+Copy the portrait MP4 to `outputs/dragon-feature-tour.mp4` and widescreen to `outputs/dragon-feature-tour-widescreen.mp4`. The current posters use the frame at 1.3 seconds:
+
+```sh
+ffmpeg -ss 1.3 -i outputs/dragon-feature-tour.mp4 -frames:v 1 -q:v 2 outputs/dragon-poster.jpg
+ffmpeg -ss 1.3 -i outputs/dragon-feature-tour-widescreen.mp4 -frames:v 1 -q:v 2 outputs/dragon-poster-widescreen.jpg
+exiftool -overwrite_original -all= outputs/dragon-feature-tour*.mp4 outputs/dragon-poster*.jpg
+```
+
+Probe the final files, decode them fully, and visually review the opening, every cut, the throw and landing, and the final frame. Both videos should contain 1,035 frames at 30 fps, lasting 34.5 seconds with no audio. Run [the combined site build](publishing.md) and verify both players and chapter buttons before publishing.
+
+The older `work/recording/main.js`, `demo-grab.js`, `style.css`, `export.html` and `vite.config.js` preserve the original model’s recording setup. They are historical references; use the three `short-*`/`build-short-recorder` files above for the included Elder Fire model.

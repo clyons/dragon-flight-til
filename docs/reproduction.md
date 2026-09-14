@@ -35,7 +35,7 @@ python scripts/prepare-elder-fire.py /path/to/elder-fire.stl
 
 On Windows, activate with `.venv\Scripts\Activate.ps1`. The pinned tool versions were validated with Python 3.14.
 
-The script requires source SHA-256 `806fe02ccc02b2fcd39822e8e42cab209b01781f5d306517b64b8ea5c04f4280`. It simplifies each of 86 shells separately, smooths body and wing ridges, assigns them to seven bodies, and exports centred meshes and contact proxies to `public/models/elder-fire/`. The default budget produces 120,106 triangles in 6,005,888 bytes of STL geometry. The existing licence notice remains in that directory. A different source revision needs its grouping reviewed; do not bypass the hash guard.
+The script requires source SHA-256 `806fe02ccc02b2fcd39822e8e42cab209b01781f5d306517b64b8ea5c04f4280`. It simplifies each of 86 shells separately, smooths body, wing and foot ridges, assigns them to seven bodies, and exports centred meshes and contact proxies to `public/models/elder-fire/`. The default budget produces 120,106 triangles in 6,005,888 bytes of STL geometry. The existing licence notice remains in that directory. A different source revision needs its grouping reviewed; do not bypass the hash guard.
 
 The source and adaptation are [CC BY-NC-SA 4.0](../public/models/elder-fire/LICENSE.md). Preserve the attribution and identify further changes. After regenerating, run the tests and inspect the moving model: numerical stability alone does not prove decorative parts are grouped correctly.
 

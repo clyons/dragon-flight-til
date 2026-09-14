@@ -4,13 +4,13 @@ A Three.js playground that brings an articulated print model to life with Box3D 
 
 **[Play the dragon playground](https://clyons.github.io/dragon-flight-til/play/)** — the model is included; no download or setup needed.
 
-[![Watch the dragon climb into a turn in the widescreen demo](outputs/dragon-poster-widescreen.jpg?v=flight)](https://clyons.github.io/dragon-flight-til/widescreen.html)
+[![Watch the dragon climb into a turn in the widescreen demo](outputs/dragon-poster-widescreen.jpg?v=elder-fire)](https://clyons.github.io/dragon-flight-til/widescreen.html)
 
 **[Watch the widescreen demo](https://clyons.github.io/dragon-flight-til/widescreen.html)** · [Portrait version](https://clyons.github.io/dragon-flight-til/) · [Download the widescreen MP4](outputs/dragon-feature-tour-widescreen.mp4) · [Video chapters and recording method](docs/demo.md)
 
 The playable version uses Biocraftlab’s **Elder Fire Dragon**, simplified from 1.28 million to 120,106 triangles (about 6 MB) and grouped into seven simulated sections. Its fixed wings follow the shoulders. Autopilot alternates a circle, a figure eight, an opposite circle, and another figure eight, with higher swoops to give the wings room. The adapted assets are included under [CC BY-NC-SA 4.0](public/models/elder-fire/LICENSE.md).
 
-The two 31.4-second videos show the original experiment with jars_2003’s dragon. The widescreen video is 1920 × 906; the portrait edit is 1080 × 1350 (4:5). Both are 30 fps, captioned, and silent. That original model’s geometry is not included.
+The two 34.5-second videos show the current Elder Fire dragon: circles and figure eights, head steering, a shake and throw, and all three materials. The widescreen video is 1920 × 906; the portrait edit is 1080 × 1350 (4:5). Both are 30 fps, captioned, and silent.
 
 [Read the TIL: Teaching a printed dragon to fly](https://ciaranlyons.com/til/2026/09/13/teaching-a-printed-dragon-to-fly/)
 
@@ -65,4 +65,4 @@ Jade, Copper, and Obsidian use different optical properties. The grabbed section
 
 Flight is a stylized controller, not an aerodynamic simulation. The wings are grouped with the shoulders and move together. Only head/foot self-collisions are enabled; the rest of the printed interlocking sections can intersect. See [implementation details and limitations](docs/how-it-works.md).
 
-For the combined playable and video GitHub Pages build, see [publishing](docs/publishing.md). See [attribution and asset rights](docs/attribution.md) for the model licence and historical video credits.
+For the combined playable and video GitHub Pages build, see [publishing](docs/publishing.md). See [attribution and asset rights](docs/attribution.md) for the model licence and original experiment credits.
