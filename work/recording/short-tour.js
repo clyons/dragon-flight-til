@@ -1,5 +1,5 @@
 import { Vector3, MathUtils } from 'three';
-const FPS=30, FRAMES=1035;
+const FPS=30, SOURCE_FRAMES=1035, FRAMES=945;
 const smooth=(t,a,b)=>MathUtils.smoothstep(t,a,b);
 export async function runShortTour(app) {
   const {portrait,width,height,renderer,sim,camera,controls,homeTarget}=app;
@@ -21,16 +21,16 @@ export async function runShortTour(app) {
   app.resetForCut();app.changeMaterial('jade');app.fly();preroll(8);
   const events=new Map([
     [120,()=>{preroll(8);chapter('02 / FIGURE EIGHT','Swoop through both sides.');}],
-    [300,()=>{preroll(11);chapter('03 / REVERSE THE CIRCLE','A fresh view of the dragon.');}],
-    [390,()=>{chapter('04 / STEER THE HEAD','← Turn left');app.input('ArrowLeft');}],
+    [300,()=>preroll(11)],
+    [390,()=>{chapter('03 / STEER THE HEAD','← Turn left');app.input('ArrowLeft');}],
     [426,()=>{detail='→ Turn right';app.input('ArrowRight');}],
     [462,()=>{detail='↑ Lift the head and climb';app.input('ArrowUp');}],
-    [510,()=>{app.clearInput();app.resetForCut();chapter('05 / GRAB & SHAKE','Pick it up. Give it a shake.');app.beginGrab();}],
-    [591,()=>chapter('06 / THROW','And let it fly.')],
+    [510,()=>{app.clearInput();app.resetForCut();chapter('04 / GRAB & SHAKE','Pick it up. Give it a shake.');app.beginGrab();}],
+    [591,()=>chapter('05 / THROW','And let it fly.')],
     [609,()=>app.release()],
-    [759,()=>{app.resetForCut();app.changeMaterial('copper');chapter('07 / MATERIALS','Copper · warm and metallic');}],
+    [759,()=>{app.resetForCut();app.changeMaterial('copper');chapter('06 / MATERIALS','Copper · warm and metallic');}],
     [840,()=>{app.changeMaterial('obsidian');detail='Obsidian · a soft, dark shine';}],
-    [921,()=>{app.resetForCut();app.changeMaterial('jade');chapter('08 / RESET','Back to the beginning.');}],
+    [921,()=>{app.resetForCut();app.changeMaterial('jade');chapter('07 / RESET','Back to the beginning.');}],
     [975,()=>chapter('GO FOR A SPIN','Play the dragon playground.')],
   ]);
   const text=(value,x,y,size,color='#24372f',weight=500)=>{ctx.fillStyle=color;ctx.font=`${weight} ${size}px "DM Sans", sans-serif`;ctx.fillText(value,x,y);};
@@ -77,7 +77,7 @@ export async function runShortTour(app) {
     text('Elder Fire Dragon · Biocraftlab · CC BY-NC-SA 4.0',64,portrait?1312:871,18,'#647269');
     if(!portrait)text('clyons.github.io/dragon-flight-til/play/',1410,871,18,'#647269');
   };
-  for(let frame=0;frame<FRAMES;frame++){
+  for(let frame=0;frame<SOURCE_FRAMES;frame++){
     events.get(frame)?.();
     if(frame>=510&&frame<609){
       const t=(frame-510)/FPS;
@@ -95,12 +95,16 @@ export async function runShortTour(app) {
       const angle=Math.sin((frame-759)/FPS*.5)*.18;
       camera.position.set(6,12,20).multiplyScalar(portrait?1.375:1).applyAxisAngle(new Vector3(0,1,0),angle).add(controls.target);
     }
-    app.advance();paint();
-    const videoFrame=new VideoFrame(canvas,{timestamp:Math.round(frame*1e6/FPS),duration:Math.round(1e6/FPS)});
-    encoder.encode(videoFrame,{keyFrame:frame%60===0});videoFrame.close();
+    app.advance();
+    // Advance the reverse-circle setup off-record, preserving the steering entry pose.
+    if(frame>=300&&frame<390)continue;
+    const outputFrame=frame<300?frame:frame-90;
+    paint();
+    const videoFrame=new VideoFrame(canvas,{timestamp:Math.round(outputFrame*1e6/FPS),duration:Math.round(1e6/FPS)});
+    encoder.encode(videoFrame,{keyFrame:outputFrame%60===0});videoFrame.close();
     if(frame%15===0){
       await encoder.flush();if(failure)throw failure;
-      indicator.textContent=`Recording ${format}: ${Math.floor(frame/FRAMES*100)}%`;
+      indicator.textContent=`Recording ${format}: ${Math.floor(outputFrame/FRAMES*100)}%`;
       await new Promise(resolve=>setTimeout(resolve,0));
     }
   }

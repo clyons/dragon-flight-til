@@ -10,7 +10,7 @@ A Three.js playground that brings an articulated print model to life with Box3D 
 
 The playable version uses Biocraftlab’s **Elder Fire Dragon**, simplified from 1.28 million to 120,106 triangles (about 6 MB) and grouped into seven simulated sections. Its fixed wings follow the shoulders. Autopilot alternates a circle, a figure eight, an opposite circle, and another figure eight, with higher swoops to give the wings room. The adapted assets are included under [CC BY-NC-SA 4.0](public/models/elder-fire/LICENSE.md).
 
-The two 34.5-second videos show the current Elder Fire dragon: circles and figure eights, head steering, a shake and throw, and all three materials. The widescreen video is 1920 × 906; the portrait edit is 1080 × 1350 (4:5). Both are 30 fps, captioned, and silent.
+The two 31.5-second videos show the current Elder Fire dragon: a circle and figure eight, head steering, a shake and throw, and all three materials. The widescreen video is 1920 × 906; the portrait edit is 1080 × 1350 (4:5). Both are 30 fps, captioned, and silent.
 
 [Read the TIL: Teaching a printed dragon to fly](https://ciaranlyons.com/til/2026/09/13/teaching-a-printed-dragon-to-fly/)
 

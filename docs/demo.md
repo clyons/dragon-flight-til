@@ -2,22 +2,21 @@
 
 [Play the Elder Fire playground](https://clyons.github.io/dragon-flight-til/play/) · [Watch portrait](https://clyons.github.io/dragon-flight-til/) · [Watch widescreen](https://clyons.github.io/dragon-flight-til/widescreen.html) · [Download MP4](../outputs/dragon-feature-tour.mp4)
 
-Both editions: 34.5 seconds · H.264 · 30 fps · 1,035 frames · no audio. Portrait: 1080 × 1350 (4:5). Widescreen: 1920 × 906. The model is Biocraftlab’s Elder Fire Dragon, with the body, wings and feet smoothed; see [attribution](attribution.md).
+Both editions: 31.5 seconds · H.264 · 30 fps · 945 frames · no audio. Portrait: 1080 × 1350 (4:5). Widescreen: 1920 × 906. The model is Biocraftlab’s Elder Fire Dragon, with the body, wings and feet smoothed; see [attribution](attribution.md).
 
 | Time | Feature |
 | --- | --- |
 | 00:00 | Head-led circle, already moving from the opening frame |
 | 00:04 | Figure eight |
-| 00:10 | Circle in the other direction |
-| 00:13 | Left, right and upward head steering |
-| 00:17 | Pick up, shake and wind up |
-| 00:19.7 | Throw stroke; release at 00:20.3, followed by landing |
-| 00:25.3 | Copper |
-| 00:28 | Obsidian |
-| 00:30.7 | Reset result, with the transition excluded |
-| 00:32.5 | Go for a spin |
+| 00:10 | Left, right and upward head steering |
+| 00:14 | Pick up, shake and wind up |
+| 00:16.7 | Throw stroke; release at 00:17.3, followed by landing |
+| 00:22.3 | Copper |
+| 00:25 | Obsidian |
+| 00:27.7 | Reset result, with the transition excluded |
+| 00:29.5 | Go for a spin |
 
-The edit skips stretches of autopilot between the three views, the return-to-autopilot countdown, and every reset transition. Each visible segment runs at normal simulation speed. Both players link to each other, the playable demo and the [published TIL](https://ciaranlyons.com/til/2026/09/13/teaching-a-printed-dragon-to-fly/).
+The edit skips stretches of autopilot between the flight views, the return-to-autopilot countdown, and every reset transition. Each visible segment runs at normal simulation speed. Both players link to each other, the playable demo and the [published TIL](https://ciaranlyons.com/til/2026/09/13/teaching-a-printed-dragon-to-fly/).
 
 ## Recording method
 
@@ -57,6 +56,6 @@ ffmpeg -ss 1.3 -i outputs/dragon-feature-tour-widescreen.mp4 -frames:v 1 -q:v 2 
 exiftool -overwrite_original -all= outputs/dragon-feature-tour*.mp4 outputs/dragon-poster*.jpg
 ```
 
-Probe the final files, decode them fully, and visually review the opening, every cut, the throw and landing, and the final frame. Both videos should contain 1,035 frames at 30 fps, lasting 34.5 seconds with no audio. Run [the combined site build](publishing.md) and verify both players and chapter buttons before publishing.
+Probe the final files, decode them fully, and visually review the opening, every cut, the throw and landing, and the final frame. Both videos should contain 945 frames at 30 fps, lasting 31.5 seconds with no audio. Run [the combined site build](publishing.md) and verify both players and chapter buttons before publishing.
 
 The older `work/recording/main.js`, `demo-grab.js`, `style.css`, `export.html` and `vite.config.js` preserve the original model’s recording setup. They are historical references; use the three `short-*`/`build-short-recorder` files above for the included Elder Fire model.
