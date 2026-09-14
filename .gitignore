@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.venv/
+__pycache__/
+.DS_Store
+.env
+.env.*
+# Model files are supplied separately; see docs/attribution.md.
+public/models/*.stl
+public/models/*.json
+outputs/dragon-parts.png
+site/
+recordings/

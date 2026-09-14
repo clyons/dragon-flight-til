@@ -1,0 +1,20 @@
+{
+  "name": "dragon-flight-lab",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test tests/physics.test.mjs",
+    "build:demo": "node scripts/build-demo.mjs"
+  },
+  "dependencies": {
+    "box3d-wasm": "0.2.0",
+    "three": "0.186.0"
+  },
+  "devDependencies": {
+    "vite": "8.3.0"
+  }
+}

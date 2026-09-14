@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#eae7df" />
+    <title>Dragon · Flight playground</title>
+  </head>
+  <body>
+    <canvas
+      id="scene"
+      aria-label="Interactive 3D dragon. Drag to orbit, scroll to zoom."
+    ></canvas>
+    <header>
+      <a class="brand" href="./">DRAGON<span>FLIGHT PLAYGROUND</span></a>
+      <div class="engine"><i></i> THREE.JS + BOX3D</div>
+    </header>
+    <main>
+      <div class="intro">
+        <h1>A little myth.<br />A little motion.</h1>
+        <p>Go for a spin.</p>
+      </div>
+      <div class="status">
+        <span id="mode-label">Loading…</span
+        ><span id="telemetry">Loading your dragon…</span>
+      </div>
+      <section class="toolbar" aria-label="Dragon controls">
+        <div class="mode-buttons">
+          <button id="fly" class="primary" disabled>
+            <span>↗</span> Take flight</button
+          ><button id="grab" disabled aria-pressed="false">Grab</button
+          ><button id="reset" disabled aria-label="Reset dragon">↺</button>
+        </div>
+        <div class="separator"></div>
+        <label class="color-label"
+          >MATERIAL
+          <select id="finish" aria-label="Dragon material">
+            <option value="jade">Jade</option>
+            <option value="copper">Copper</option>
+            <option value="obsidian">Obsidian</option>
+          </select></label
+        >
+        <button id="pause" aria-label="Pause simulation" disabled>Ⅱ</button
+        ><button
+          id="help"
+          aria-label="Show controls"
+          aria-controls="help-panel"
+          aria-expanded="false"
+        >
+          ?
+        </button>
+      </section>
+      <div id="flight-controls" hidden>
+        <button data-key="ArrowLeft" aria-label="Turn left">←</button
+        ><button data-key="ArrowUp" aria-label="Climb">↑</button
+        ><button data-key="ArrowDown" aria-label="Descend">↓</button
+        ><button data-key="ArrowRight" aria-label="Turn right">→</button>
+        <button id="autopilot" disabled>Autopilot on</button>
+      </div>
+      <div
+        class="help"
+        id="help-panel"
+        role="region"
+        aria-label="Controls"
+        hidden
+      >
+        <h2>Controls</h2>
+        <dl class="shortcuts" aria-label="Mouse controls">
+          <div>
+            <dt>Rotate view</dt>
+            <dd>Drag</dd>
+          </div>
+          <div>
+            <dt>Zoom</dt>
+            <dd>Scroll</dd>
+          </div>
+          <div>
+            <dt>Move a part</dt>
+            <dd>Drag in Grab mode</dd>
+          </div>
+        </dl>
+        <dl class="shortcuts" aria-label="Keyboard shortcuts">
+          <div>
+            <dt>Steer head</dt>
+            <dd aria-label="Arrow keys">
+              <kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd>
+            </dd>
+          </div>
+          <div>
+            <dt>Pause / resume</dt>
+            <dd><kbd>Space</kbd></dd>
+          </div>
+          <div>
+            <dt>Reset</dt>
+            <dd><kbd>R</kbd></dd>
+          </div>
+          <div>
+            <dt>Toggle grab</dt>
+            <dd><kbd>G</kbd></dd>
+          </div>
+          <div>
+            <dt>Toggle help</dt>
+            <dd><kbd>/</kbd> or <kbd>?</kbd></dd>
+          </div>
+        </dl>
+      </div>
+      <div class="footer">
+        <span id="interaction-hint"
+          >Drag to look around · Scroll to zoom · / for help</span
+        ><a
+          href="https://makerworld.com/en/models/2735519-articulated-dragon#profileId-3032774"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Original model ↗</a
+        >
+      </div>
+      <div id="error" role="alert" hidden></div>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

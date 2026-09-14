@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DRAGON · Flight Playground</title>
+<style>
+  :root { font-family: system-ui,sans-serif; color:#24372f; background:#eae7df; }
+  body { max-width:720px; margin:40px auto; padding:0 24px; }
+  h1 { font-size:clamp(26px,4vw,44px); font-weight:500; letter-spacing:-1.5px; margin-bottom:8px; }
+  p { line-height:1.6; }
+  video { width:100%; max-width:540px; border-radius:16px; background:#eae7df; display:block; margin:28px 0 16px; }
+  nav { display:flex; flex-wrap:wrap; gap:8px; }
+  button,a { color:inherit; }
+  button { font:inherit; border:1px solid #bbc6b8; border-radius:20px; padding:8px 14px; background:transparent; cursor:pointer; }
+  button:hover { background:#d5dfd1; }
+  a { text-underline-offset:4px; }
+  .small { font-size:13px; color:#58685d; }
+  .brand { display:inline-block; font-size:28px; font-weight:800; letter-spacing:-1px; text-decoration:none; line-height:1; margin-bottom:14px; }
+  .brand span { display:block; font-size:9px; letter-spacing:2px; margin-top:9px; font-weight:600; }
+</style>
+<a class="brand" href="index.html">DRAGON<span>FLIGHT PLAYGROUND</span></a>
+<h1>Go for a spin.</h1>
+<p>A 72-second tour of the dragon playground. Flight, steering, gravity, grabbing, materials, and reset.</p>
+<video controls playsinline preload="metadata" poster="outputs/dragon-poster.jpg" aria-label="Dragon playground feature tour">
+  <source src="outputs/dragon-feature-tour.mp4" type="video/mp4">
+  <a href="outputs/dragon-feature-tour.mp4">Download the video</a>
+</video>
+<p><a href="https://github.com/clyons/dragon-flight-til">Source, reproduction notes, and attribution on GitHub</a></p>
+<p><a href="widescreen.html">Watch the widescreen version</a></p>
+<nav aria-label="Video chapters">
+  <button data-time="3">Take flight</button><button data-time="17">Steer the head</button>
+  <button data-time="23">Autopilot</button><button data-time="33">Drop</button>
+  <button data-time="41">Grab &amp; shake</button><button data-time="48">Throw</button><button data-time="55">Materials</button>
+  <button data-time="66">Reset</button>
+</nav>
+<p><a href="outputs/dragon-feature-tour.mp4" download>Download MP4</a> · 1080 × 1350 · Portrait 4:5 · 30 fps · No audio</p>
+<p class="small">Three.js + Box3D. Original dragon model by <a href="https://makerworld.com/en/models/2735519-articulated-dragon#profileId-3032774">jars_2003 on MakerWorld</a>. No model files are included.</p>
+<script>
+  const video = document.querySelector('video');
+  document.querySelectorAll('[data-time]').forEach(button => button.addEventListener('click', () => {
+    video.currentTime = Number(button.dataset.time);
+    video.play().catch(() => {});
+  }));
+</script>
+</html>
