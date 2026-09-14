@@ -116,15 +116,15 @@ async function start() {
   };
   const finishes = {
     jade: {
-      color: 0x429b76,
-      roughness: 0.14,
-      transmission: 0.45,
+      color: 0x2f805f,
+      roughness: 0.27,
+      transmission: 0.38,
       thickness: 0.7,
-      attenuationColor: 0x25865c,
-      attenuationDistance: 2,
-      clearcoat: 0.75,
-      clearcoatRoughness: 0.12,
-      envMapIntensity: 1.15,
+      attenuationColor: 0x1e704e,
+      attenuationDistance: 1.6,
+      clearcoat: 0.38,
+      clearcoatRoughness: 0.23,
+      envMapIntensity: 1,
     },
     copper: {
       color: 0xb86d42,
