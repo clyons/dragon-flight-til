@@ -6,7 +6,9 @@ A Three.js playground that brings an articulated print model to life with Box3D 
 
 **[Watch the widescreen demo](https://clyons.github.io/dragon-flight-til/widescreen.html)** · [Portrait version](https://clyons.github.io/dragon-flight-til/) · [Download the widescreen MP4](outputs/dragon-feature-tour-widescreen.mp4) · [Video chapters and recording method](docs/demo.md)
 
-The public page is a recorded feature tour: head-led flight, manual steering, autopilot handoff, grabbing, a throw and floor bump, three materials, and reset. Anyone can watch it without a model download or installation. The widescreen video is 72 seconds at 1920 × 906; the portrait edit is 71 seconds at 1080 × 1350 (4:5). Both are 30 fps, with captions and no audio. The interactive source below runs locally with separately obtained model assets.
+The public page is a 31.4-second recorded tour: head-led flight, manual steering, a quick grab and shake, a throw and floor bump, Copper and Obsidian, then reset. Anyone can watch it without a model download or installation. The widescreen video is 1920 × 906; the portrait edit is 1080 × 1350 (4:5). Both are 30 fps, with captions and no audio. The interactive source below runs locally with separately obtained model assets.
+
+[Read the TIL: Teaching a printed dragon to fly](https://ciaranlyons.com/til/2026/09/13/teaching-a-printed-dragon-to-fly/)
 
 [How it works](docs/how-it-works.md) · [Reproduce it](docs/reproduction.md) · [Attribution](docs/attribution.md)
 
