@@ -2,11 +2,11 @@
 
 A Three.js playground that brings an articulated print model to life with Box3D physics. Steer the dragon through climbing turns and low swoops, watch the tail trail behind, or grab a section and give it a shake.
 
-[![Watch the 71-second portrait demo](outputs/dragon-poster.jpg?v=opening)](https://clyons.github.io/dragon-flight-til/)
+[![Watch the dragon climb into a turn in the widescreen demo](outputs/dragon-poster-widescreen.jpg?v=flight)](https://clyons.github.io/dragon-flight-til/widescreen.html)
 
-**[Watch the demo](https://clyons.github.io/dragon-flight-til/)** · [Widescreen version](https://clyons.github.io/dragon-flight-til/widescreen.html) · [Download the portrait MP4](outputs/dragon-feature-tour.mp4) · [Video chapters and recording method](docs/demo.md)
+**[Watch the widescreen demo](https://clyons.github.io/dragon-flight-til/widescreen.html)** · [Portrait version](https://clyons.github.io/dragon-flight-til/) · [Download the widescreen MP4](outputs/dragon-feature-tour-widescreen.mp4) · [Video chapters and recording method](docs/demo.md)
 
-The public page is a recorded feature tour: head-led flight, manual steering, autopilot handoff, grabbing, a throw and floor bump, three materials, and reset. Anyone can watch it without a model download or installation. The MP4 is 71 seconds, 1080 × 1350 (4:5), 30 fps, with captions and no audio. The interactive source below runs locally with separately obtained model assets.
+The public page is a recorded feature tour: head-led flight, manual steering, autopilot handoff, grabbing, a throw and floor bump, three materials, and reset. Anyone can watch it without a model download or installation. The widescreen video is 72 seconds at 1920 × 906; the portrait edit is 71 seconds at 1080 × 1350 (4:5). Both are 30 fps, with captions and no audio. The interactive source below runs locally with separately obtained model assets.
 
 [How it works](docs/how-it-works.md) · [Reproduce it](docs/reproduction.md) · [Attribution](docs/attribution.md)
 
