@@ -86,6 +86,7 @@ def main():
     base_owners = dict(zip(BODY_SHELLS, BODY_GROUPS))
     wing_shells = sorted(WING_SHELLS)
     simplified = {}
+    collision_meshes = {}
     for index, shell in enumerate(shells):
         if index in base_owners:
             owner = base_owners[index]
@@ -100,6 +101,19 @@ def main():
         owners[index] = owner
         target = min(len(shell.faces), max(24, round(args.triangles * len(shell.faces) / len(mesh.faces))))
         part = shell.simplify_quadric_decimation(face_count=target) if target < len(shell.faces) else shell.copy()
+        # Keep the established mass/anchor reference independent of surface polish.
+        collision_meshes[index] = part.copy()
+        collision_meshes[index].vertices = convert(part.vertices)
+        if owner != 0 and index not in FOOT_SHELLS and len(part.faces) > 100:
+            original = part.vertices.copy()
+            trimesh.smoothing.filter_humphrey(part, alpha=.015, beta=.7, iterations=40)
+            displacement = part.vertices - original
+            # Source units are millimetres. Preserve the broad silhouette and
+            # print-joint gaps while reducing the small ridges on each shell.
+            limit = .7 if index in WING_SHELLS else 1.2
+            lengths = np.linalg.norm(displacement, axis=1)
+            displacement *= np.minimum(1, limit / np.maximum(lengths, 1e-12))[:, None]
+            part.vertices = original + displacement
         part.vertices = convert(part.vertices)
         simplified[index] = part
         groups[owner].append(part)
@@ -110,7 +124,7 @@ def main():
         part = trimesh.util.concatenate(group)
         # Keep physics centers on the axial body, not shifted into the wide wings.
         core_ids = [i for i, owner in base_owners.items() if owner == index]
-        core = trimesh.util.concatenate([simplified[i] for i in core_ids])
+        core = trimesh.util.concatenate([collision_meshes[i] for i in core_ids])
         center = core.bounds.mean(axis=0)
         part.vertices -= center
         core.vertices -= center
@@ -142,7 +156,7 @@ def main():
                     sourceSha256=hashlib.sha256(source_bytes).hexdigest(), sourceTriangles=len(mesh.faces),
                     triangles=sum(p['triangles'] for p in parts), scale=SCALE, parts=parts,
                     anchors=convert(anchors_source).tolist(),
-                    modifications='Simplified meshes, seven rigid groups, fixed wings, transformed coordinates and approximate collision hulls.')
+                    modifications='Simplified meshes, seven rigid groups, fixed wings, smoothed body and wing surfaces, transformed coordinates and approximate collision hulls.')
     (args.output / 'dragon.json').write_text(json.dumps(manifest, separators=(',', ':')) + '\n')
     print(json.dumps({'triangles':manifest['triangles'], 'stlBytes':sum((args.output / p['file']).stat().st_size for p in parts),
                       'parts':[{'name':p['name'],'triangles':p['triangles']} for p in parts]}, indent=2))

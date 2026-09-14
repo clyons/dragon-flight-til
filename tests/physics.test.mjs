@@ -5,6 +5,7 @@ import { createHash } from "node:crypto";
 import { Vector3, Quaternion, Box3 } from "three";
 import { ConvexHull } from "three/addons/math/ConvexHull.js";
 import { createSimulation } from "../src/physics.js";
+import { createFlightPath } from "../src/flight-path.js";
 const manifest = JSON.parse(
   readFileSync(new URL("../public/models/elder-fire/dragon.json", import.meta.url)),
 );
@@ -189,6 +190,46 @@ test("grab lifts and shakes head, wings, and tail without breaking joints; relea
   }
 });
 
+test("higher route repeats circle, figure eight, reverse circle, figure eight without jumps", () => {
+  const path = createFlightPath(new Vector3(0, 12, 0), new Quaternion());
+  const transitions = [], turns = Array.from({ length: 8 }, () => ({ positive: 0, negative: 0 }));
+  const crossings = new Map();
+  let previous, low = Infinity, high = -Infinity;
+  for (let frame = 0; frame < 150 * 60; frame++) {
+    const state = path.step(1 / 60);
+    const index = state.cycle * 4 + state.legIndex;
+    if (!previous || index !== previous.cycle * 4 + previous.legIndex)
+      transitions.push(state.legIndex);
+    if (frame > 180) {
+      low = Math.min(low, state.position.y);
+      high = Math.max(high, state.position.y);
+    }
+    if (state.pattern === "figure-eight" && Math.abs(state.progress - 0.5) < 0.001)
+      crossings.set(index, state.position.clone());
+    if (previous) {
+      assert.ok(state.position.distanceTo(previous.position) < 0.17, "target never teleports at pattern joins");
+      assert.ok(state.rotation.angleTo(previous.rotation) < 0.05, "heading and bank change smoothly");
+      const t = turns[previous.cycle * 4 + previous.legIndex];
+      const a = previous.tangent, b = state.tangent;
+      const angle = Math.atan2(a.x * b.z - a.z * b.x, a.x * b.x + a.z * b.z);
+      if (t) t[angle > 0 ? "positive" : "negative"] += angle;
+    }
+    previous = state;
+  }
+  assert.deepEqual(transitions, [0, 1, 2, 3, 0, 1, 2, 3, 0]);
+  assert.ok(low > 7.5 && high > 17.5 && high < 18.1, "low passes and peaks are both raised");
+  for (const offset of [0, 4]) {
+    assert.ok(Math.abs(turns[offset].negative + 2 * Math.PI) < 0.05, "first circle turns once");
+    assert.ok(Math.abs(turns[offset + 2].positive - 2 * Math.PI) < 0.05, "second circle turns once in the opposite direction");
+    for (const i of [offset + 1, offset + 3]) {
+      assert.ok(turns[i].positive > 4 && turns[i].negative < -4, "each figure eight banks both ways");
+      assert.ok(Math.abs(turns[i].positive + turns[i].negative) < 0.05, "figure-eight lobes cancel their turn");
+      const p = crossings.get(i);
+      assert.ok(p && Math.hypot(p.x, p.z) < 0.2 && p.y > 17.5, "the two lobes meet above the starting crossing");
+    }
+  }
+});
+
 test("flight swoops through a circuit with its nose forward and a physically trailing tail", async () => {
   const sim = await createSimulation(manifest);
   const bounds = {
@@ -210,7 +251,8 @@ test("flight swoops through a circuit with its nose forward and a physically tra
   const phases = new Set();
   try {
     sim.setMode("flight");
-    for (let frame = 0; frame < 3600; frame++) {
+    // Cover two complete four-pattern cycles with the actual articulated bodies.
+    for (let frame = 0; frame < 9000; frame++) {
       sim.step(1 / 60);
       const torso = new Vector3().copy(sim.bodies[2].getPosition());
       headPositions.push(new Vector3().copy(sim.bodies[0].getPosition()));
@@ -269,6 +311,7 @@ test("flight swoops through a circuit with its nose forward and a physically tra
       bounds.maxY - bounds.minY > 7,
       "alternates deep swoops and high climbs",
     );
+    assert.ok(bounds.minY > 4.5, "the body has clearance throughout the higher route");
     assert.ok(facing / samples > 0.85, "head points in direction of travel");
     assert.ok(
       bodyToEarlierHead < bodyToCurrentHead * 0.7,
@@ -536,7 +579,8 @@ test("diving reaches the floor, rebounds, and settles under gravity", async () =
     for (let frame = 0; frame < 600; frame++) {
       sim.step(1 / 60, new Set(["ArrowDown"]));
       if (sim.mode === "drop" && !hit) hit = sim.impact;
-      if (hit) rebound = Math.max(rebound, sim.bodies[0].getLinearVelocity().y);
+      // A banked landing can keep the head in contact while the torso rebounds.
+      if (hit) rebound = Math.max(rebound, ...sim.bodies.slice(0, 4).map(body => body.getLinearVelocity().y));
     }
     assert.ok(
       hit && hit.part <= 3 && hit.speed > 1.5,

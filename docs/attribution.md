@@ -4,7 +4,7 @@
 
 The hosted playground uses **Biocraftlab’s [Elder Fire Dragon – Flexi Toy Figure](https://www.printables.com/model/1385888-elder-fire-dragon-flexi-toy-figure)** under [Creative Commons Attribution–NonCommercial–ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/). The creator’s [listing PDF](https://media.printables.com/media/prints/1385888/pdfs/1385888-elder-fire-dragon-flexi-toy-figure-44d5651a-e864-41c7-89ef-9f5f70b9a84c.pdf) records that licence.
 
-The included adaptation reduces 1,285,002 triangles to 120,106, combines ten axial sections into seven rigid groups, fixes the wings to the shoulders, transforms coordinates, and adds approximate collision hulls and anchors. These adapted meshes and collision data carry the same CC BY-NC-SA 4.0 licence; see the [asset notice](../public/models/elder-fire/LICENSE.md). Credit the creator, identify changes, retain the licence, and observe its noncommercial and share-alike terms when reusing them.
+The included adaptation reduces 1,285,002 triangles to 120,106, combines ten axial sections into seven rigid groups, fixes the wings to the shoulders, smooths the body and wing surface detail, transforms coordinates, and adds approximate collision hulls and anchors. These adapted meshes and collision data carry the same CC BY-NC-SA 4.0 licence; see the [asset notice](../public/models/elder-fire/LICENSE.md). Credit the creator, identify changes, retain the licence, and observe its noncommercial and share-alike terms when reusing them.
 
 ## Original video model
 

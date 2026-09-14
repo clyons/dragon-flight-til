@@ -2,7 +2,7 @@
 
 ## Simplify and group the printed model
 
-Biocraftlab’s Elder Fire STL contains 1,285,002 triangles in 86 disconnected shells. [prepare-elder-fire.py](../scripts/prepare-elder-fire.py) verifies the source hash, simplifies each shell separately, and groups ten axial sections and their decorations into seven centred meshes. The result retains 120,106 triangles across about 6 MB of STL files. Coordinates change from Z-up to Y-up and are scaled by 0.052. The component mapping, anchors, and offsets are specific to this model.
+Biocraftlab’s Elder Fire STL contains 1,285,002 triangles in 86 disconnected shells. [prepare-elder-fire.py](../scripts/prepare-elder-fire.py) verifies the source hash, simplifies each shell separately, and groups ten axial sections and their decorations into seven centred meshes. A bounded smoothing pass softens the small body and wing ridges after decimation. It preserves the original head and feet, limits surface movement to 1.2 mm on the body and 0.7 mm on the wings in source units, and retains the established mass hulls and joint positions. The result retains 120,106 triangles across about 6 MB of STL files. Coordinates change from Z-up to Y-up and are scaled by 0.052. The component mapping, anchors, and offsets are specific to this model.
 
 The rigid groups are head, shoulders and wings, torso, hind legs, tail base, tail middle, and tail tip. Every wing panel and hinge pin is explicitly assigned to the shoulders. Wings stay fixed in their printed pose, avoiding a new wing rig. Six spherical joints join them. The neck permits roughly ±69° of twist and a 66° swing cone; its local twist axis is aligned with world up in the initial pose.
 
@@ -23,7 +23,11 @@ flowchart LR
   B --> J
 ```
 
-[flight-path.js](../src/flight-path.js) constructs a closed centripetal Catmull–Rom spline and samples it with `getPointAt` and `getTangentAt`. An arc-length lookup with 600 divisions approximates distance along the circuit. The nominal speed is 6.8 scene units per second, adjusted by the tangent's vertical component. Entry blends over three seconds. Tangent change supplies banking, clamped to 0.65 radians.
+[flight-path.js](../src/flight-path.js) repeats four centripetal Catmull–Rom patterns: one circle, one figure eight, one circle in the opposite direction, then a mirrored figure eight. All four meet at the same position and forward heading. Each curve has 64 control points and a 600-division arc-length lookup. The [route illustration](../outputs/flight-path.svg) samples the actual controller.
+
+The head target ranges from about 7.7 to 18 scene units above the floor, with a 12-unit entry point. The figure-eight crossings pass at different heights. Circles have a 14-unit radius; the broader figure eights show both sides of the dragon. A complete cycle takes about 68 seconds after entry, or 70 seconds including takeoff. Starting autopilot at a higher altitude shifts the route upward.
+
+Nominal speed stays at 6.8 scene units per second, adjusted for climbs and dives. Entry blends over three seconds. Banking looks 1.5 units ahead across pattern boundaries, smooths over time, and is clamped to 0.65 radians. Manual steering still interrupts immediately; resuming autopilot begins the sequence along the current heading.
 
 The head receives a position/velocity error force plus gravity compensation, with a force limit. Its orientation is controlled by a quaternion-error torque. Shoulder and torso torques use the recorded head attitude after 0.3 and 0.4 seconds. Their positions are pulled through the joints. Additional manual neck exaggeration is removed from the heading history so the whole torso does not copy it.
 
@@ -45,7 +49,7 @@ Nine floor tiles move with the flight area. Floor impacts use restitution; a sol
 
 ## Rendering and interaction polish
 
-[main.js](../src/main.js) loads the part STLs, merges coincident render vertices, and recomputes normals. Three.js physical materials distinguish translucent Jade, metallic Copper, and softer Obsidian. Picking highlights the selected material's own colour. Contact shadows darken and tighten near the floor, alongside a moving shadow-casting light.
+[main.js](../src/main.js) loads the part STLs, merges coincident render vertices, and recomputes normals. Three.js physical materials distinguish glassy Jade on the smoother body and wings, metallic Copper, and softer Obsidian. Picking highlights the selected material's own colour. Contact shadows darken and tighten near the floor, alongside a moving shadow-casting light.
 
 Reset fades the canvas out, resets physics and camera while hidden, then fades back in over half a second. Reduced-motion preferences shorten the transition. Other motion controls are held during reset.
 

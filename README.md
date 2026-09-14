@@ -8,7 +8,7 @@ A Three.js playground that brings an articulated print model to life with Box3D 
 
 **[Watch the widescreen demo](https://clyons.github.io/dragon-flight-til/widescreen.html)** · [Portrait version](https://clyons.github.io/dragon-flight-til/) · [Download the widescreen MP4](outputs/dragon-feature-tour-widescreen.mp4) · [Video chapters and recording method](docs/demo.md)
 
-The playable version uses Biocraftlab’s **Elder Fire Dragon**, simplified from 1.28 million to 120,106 triangles (about 6 MB) and grouped into seven simulated sections. Its fixed wings follow the shoulders. The adapted assets are included under [CC BY-NC-SA 4.0](public/models/elder-fire/LICENSE.md).
+The playable version uses Biocraftlab’s **Elder Fire Dragon**, simplified from 1.28 million to 120,106 triangles (about 6 MB) and grouped into seven simulated sections. Its fixed wings follow the shoulders. Autopilot alternates a circle, a figure eight, an opposite circle, and another figure eight, with higher swoops to give the wings room. The adapted assets are included under [CC BY-NC-SA 4.0](public/models/elder-fire/LICENSE.md).
 
 The two 31.4-second videos show the original experiment with jars_2003’s dragon. The widescreen video is 1920 × 906; the portrait edit is 1080 × 1350 (4:5). Both are 30 fps, captioned, and silent. That original model’s geometry is not included.
 
