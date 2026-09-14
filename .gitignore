@@ -5,7 +5,7 @@ __pycache__/
 .DS_Store
 .env
 .env.*
-# Model files are supplied separately; see docs/attribution.md.
+# Legacy private model files must stay local. The licensed elder-fire/ assets are included.
 public/models/*.stl
 public/models/*.json
 outputs/dragon-parts.png

@@ -1,4 +1,4 @@
-name: Publish video demo
+name: Publish dragon playground
 on:
   push:
     branches: [main]
@@ -14,8 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: actions/configure-pages@v5
-      - name: Assemble video-only site
-        run: node scripts/build-demo.mjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Build playable playground and videos
+        run: npm run build:demo
       - uses: actions/upload-pages-artifact@v4
         with:
           path: site
@@ -29,6 +35,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy video demo
+      - name: Deploy playground and videos
         id: deployment
         uses: actions/deploy-pages@v4

@@ -6,80 +6,26 @@ import { Vector3, Quaternion, Box3 } from "three";
 import { ConvexHull } from "three/addons/math/ConvexHull.js";
 import { createSimulation } from "../src/physics.js";
 const manifest = JSON.parse(
-  readFileSync(new URL("../public/models/dragon.json", import.meta.url)),
+  readFileSync(new URL("../public/models/elder-fire/dragon.json", import.meta.url)),
 );
-const original = readFileSync(
-  new URL("../public/models/dragon.stl", import.meta.url),
-);
-test("all triangles from the exact source STL are preserved", () => {
-  assert.equal(
-    createHash("sha256").update(original).digest("hex"),
-    manifest.sourceSha256,
-  );
-  assert.equal(original.readUInt32LE(80), 61096);
-  const triangleKeys = (buffer) => {
-    const keys = [];
-    for (let i = 0; i < buffer.readUInt32LE(80); i++) {
-      const vertices = [];
-      for (let v = 0; v < 3; v++) {
-        const p = [];
-        for (let c = 0; c < 3; c++)
-          p.push(buffer.readFloatLE(84 + i * 50 + 12 + v * 12 + c * 4));
-        vertices.push(p);
-      }
-      keys.push(vertices);
-    }
-    return keys;
-  };
-  // Compare transformed vertex sets per triangle, accounting only for STL float32 precision.
-  const sourceTriangles = triangleKeys(original).map((t) =>
-    t.map(([x, y, z]) => [
-      (x - 31.920475) * 0.18,
-      z * 0.18,
-      -(y - 21.7185515) * 0.18,
-    ]),
-  );
-  const exportedTriangles = manifest.parts.flatMap((p) =>
-    triangleKeys(
-      readFileSync(new URL(`../public/models/${p.file}`, import.meta.url)),
-    ).map((t) => t.map((v) => v.map((x, i) => x + p.center[i]))),
-  );
-  assert.equal(exportedTriangles.length, sourceTriangles.length);
-  // Match each exported triangle to one original triangle by centroid, then verify
-  // all three vertex coordinates. Consume matches to detect duplicates/omissions.
-  const cell = (t) =>
-    [0, 1, 2].map((i) =>
-      Math.round((t.reduce((s, p) => s + p[i], 0) / 3) * 1000),
-    );
-  const buckets = new Map();
-  sourceTriangles.forEach((t) => {
-    const k = cell(t).join(",");
-    if (!buckets.has(k)) buckets.set(k, []);
-    buckets.get(k).push(t);
-  });
-  const matches = (a, b) =>
-    a.every((v) => b.some((w) => v.every((x, i) => Math.abs(x - w[i]) < 2e-6)));
-  for (const triangle of exportedTriangles) {
-    const c = cell(triangle);
-    let found = false;
-    const offsets = [0, -1, 1];
-    search: for (const x of offsets)
-      for (const y of offsets)
-        for (const z of offsets) {
-          const list = buckets.get([c[0] + x, c[1] + y, c[2] + z].join(","));
-          const index = list?.findIndex((t) => matches(t, triangle)) ?? -1;
-          if (index >= 0) {
-            list.splice(index, 1);
-            found = true;
-            break search;
-          }
-        }
-    assert.ok(found, "exported triangle matches the exact source geometry");
+test("hosted model is bounded, licensed and contains seven verified meshes", () => {
+  assert.equal(manifest.model, "elder-fire");
+  assert.equal(manifest.creator, "Biocraftlab");
+  assert.equal(manifest.license, "CC-BY-NC-SA-4.0");
+  assert.equal(manifest.parts.length, 7);
+  assert.equal(manifest.anchors.length, 6);
+  assert.ok(manifest.triangles < 150000);
+  let triangles = 0, bytes = 0;
+  for (const part of manifest.parts) {
+    const data = readFileSync(new URL(`../public/models/elder-fire/${part.file}`, import.meta.url));
+    assert.equal(createHash("sha256").update(data).digest("hex"), part.sha256);
+    assert.equal(data.readUInt32LE(80), part.triangles);
+    assert.equal(data.length, 84 + part.triangles * 50);
+    triangles += part.triangles; bytes += data.length;
+    assert.ok(part.hull.length <= 32);
   }
-  assert.equal(
-    [...buckets.values()].reduce((n, b) => n + b.length, 0),
-    0,
-  );
+  assert.equal(triangles, manifest.triangles);
+  assert.ok(bytes < 7500000, "prepared STL payload stays below 7.5 MB");
 });
 test("Box3D joints remain attached through rest, flight, steering, drop, reset", async () => {
   const sim = await createSimulation(manifest);
@@ -334,11 +280,11 @@ test("steering takes over the head, coasts without autopilot, and resumes contin
   for (const key of ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"]) {
     const sim = await createSimulation(manifest);
     try {
-      // Exercise coasting above the floor; deliberate impacts have a separate test.
+      // Leave wing clearance during sustained dives; impacts have a separate test.
       for (const body of sim.bodies) {
         const position = body.getPosition();
         body.setTransform(
-          { ...position, y: position.y + 10 },
+          { ...position, y: position.y + 20 },
           body.getRotation(),
         );
       }
@@ -612,7 +558,7 @@ test("diving reaches the floor, rebounds, and settles under gravity", async () =
 
 test("head geometry stays outside all four feet during steering and fast shaking", async () => {
   const stl = readFileSync(
-      new URL("../public/models/part-0.stl", import.meta.url),
+      new URL("../public/models/elder-fire/head.stl", import.meta.url),
     ),
     unique = new Map();
   for (let i = 0; i < stl.readUInt32LE(80); i++)

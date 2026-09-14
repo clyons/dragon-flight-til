@@ -1,24 +1,22 @@
-# Publish the video demo
+# Publish the playground and video demos
 
-The public page at https://clyons.github.io/dragon-flight-til/ plays the finished portrait video. It does not run the interactive simulation or serve model geometry. The source repository is https://github.com/clyons/dragon-flight-til.
+The [playable Elder Fire playground](https://clyons.github.io/dragon-flight-til/play/) includes the licensed, simplified model. The [portrait](https://clyons.github.io/dragon-flight-til/) and [widescreen](https://clyons.github.io/dragon-flight-til/widescreen.html) video pages retain their existing URLs. Source: [clyons/dragon-flight-til](https://github.com/clyons/dragon-flight-til).
 
 ## Build and preview
 
-The demo build uses Node's standard library and requires no package installation or model files:
-
 ```sh
-node scripts/build-demo.mjs
+npm ci
+npm test
+npm run build:demo
 python3 -m http.server 8080 --directory site
 ```
 
-Open http://localhost:8080. Check play/pause, seeking, chapter buttons, portrait sizing, and the MP4 download. The script copies only the two players, their videos and posters, and an empty `.nojekyll` marker into `site/`. It never copies `public/` or the interactive Vite build.
+Open http://localhost:8080/play/ for the interactive page and http://localhost:8080/ for the portrait player. Relative Vite asset URLs work under the GitHub Pages repository path.
+
+[build-demo.mjs](../scripts/build-demo.mjs) checks `public/` against an explicit list of seven Elder Fire STLs, their manifest and licence notice before building. Unexpected files, including locally prepared private model assets, fail the build. It then copies the generated Vite build into `site/play/` and the two existing players, videos and posters to their original locations. Raw source geometry is not included.
 
 ## GitHub Pages
 
-[The Pages workflow](../.github/workflows/pages.yml) assembles the allowlisted `site/` directory on pushes to `main` or a manual run, then deploys it using GitHub's `github-pages` environment. Enable **Settings → Pages → GitHub Actions** for a new repository. See [GitHub's official custom-workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+[The workflow](../.github/workflows/pages.yml) installs the locked JavaScript dependencies, runs the physics tests, builds `site/`, and deploys through GitHub’s `github-pages` environment on pushes to `main` or manual runs. Pages uses **GitHub Actions** as its source.
 
-After deployment, verify that the player, poster, and MP4 load from the repository subpath, that seeking returns partial content, and that model paths are absent. Keep the video and poster filenames aligned with [the player template](../demo/index.html) and [build script](../scripts/build-demo.mjs).
-
-## Interactive hosting
-
-`npm run build` still builds the local interactive experiment after [model preparation](reproduction.md). That `dist/` output can include private model assets from `public/`; it is not the Pages artifact. Hosting the interactive version requires a model with suitable redistribution permission and an accurate creator/license notice. Keep the video-only workflow until those requirements are met.
+After deployment, check the interactive model, WASM and licence from `/dragon-flight-til/play/`, exercise takeoff, steering, grabbing and reset, and verify both existing videos and posters still load. Model adaptations retain [Biocraftlab’s CC BY-NC-SA 4.0 attribution](attribution.md).

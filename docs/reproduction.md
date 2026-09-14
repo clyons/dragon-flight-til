@@ -1,45 +1,15 @@
-# Reproduce the experiment
+# Run and reproduce the playground
 
-## Install tools
+## Run locally
 
-Use Node.js 22.12 or later (the repository's `.nvmrc` selects Node 22) and Python 3.12 or later. The JavaScript lockfile pins Three.js, Box3D's WASM wrapper, and Vite. Python dependencies are pinned in [requirements.txt](../requirements.txt).
+Use Node.js 22.12 or later (see `.nvmrc`) and a browser with WebGL2 and WebAssembly SIMD. The prepared Elder Fire model is included. Python and a separate model download are unnecessary for normal use.
 
 ```sh
 npm ci
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-```
-
-On Windows, activate the environment with `.venv\Scripts\Activate.ps1` in PowerShell.
-
-## Prepare the model
-
-1. Visit the [original MakerWorld model and print profile](https://makerworld.com/en/models/2735519-articulated-dragon#profileId-3032774). Check its creator's current download and usage terms.
-2. Obtain the original `danger+dragon.stl` from that source. Rename your local copy to `dragon.stl` and place it in `public/models/` (create those directories if needed).
-3. Run the preparation script from the repository root:
-
-```sh
-python scripts/prepare-dragon.py
-```
-
-The expected source SHA-256 is:
-
-```text
-a441932338aadf2a15c81594f29e08bb5261bd9d2dcd1f70320ef65fb203c4db
-```
-
-The expected result is 61,096 preserved triangles in seven rigid sections. The script generates `part-0.stl` through `part-6.stl` and `dragon.json` beside the source. The test suite checks the source hash and compares the exported triangles. A different revision or exported format may not match this model-specific preparation; do not bypass the tests to assume it is equivalent.
-
-Model assets are ignored by Git. Do not commit them unless you have established redistribution permission and updated the attribution notice.
-
-## Run and verify
-
-```sh
 npm run dev
 ```
 
-Use the HTTP URL printed by Vite; opening `index.html` directly from disk will not load the modules and WASM correctly.
+Open the HTTP URL printed by Vite. Opening `index.html` from disk will not load modules and WASM correctly.
 
 ```sh
 npm test
@@ -47,26 +17,32 @@ npm run build
 npm run preview
 ```
 
-The 11 regression tests use the actual Box3D WebAssembly engine. They cover triangle preservation, joint attachment, settling, takeoff, long autopilot flight, manual steering and idle handoff, left/right and upward neck travel, head/foot clearance, floor bumps, reset, and grabbing after distant or high flight. These tests require the locally prepared model. A build alone cannot prove the model is available at runtime.
+The 11 tests run the actual Box3D WebAssembly engine. They check asset hashes and size, joint attachment, settling, takeoff, long autopilot flight, manual steering and idle handoff, symmetric neck travel, head/foot clearance, floor bumps, reset, and grabbing after distant or high flight. Browser checks additionally cover framing, materials, picking, help, and reset transitions.
 
-Vite may warn about Box3D's Node `module` import being externalized for browsers and about a JavaScript chunk over 500 kB. These warnings are distinct from build failures.
+Vite may warn about Box3D’s Node `module` import being externalized for browsers and about a JavaScript chunk over 500 kB. These are distinct from build failures.
 
-For a manual smoke check: take off, steer in both directions and upward, wait five seconds for autopilot, dive into the floor, grab and release a section, change all three materials, toggle help with both keys, and reset with both the button and R. Check the dissolve and reduced-motion behaviour in a browser; physics tests do not cover rendered UI transitions.
+## Regenerate the model
 
-## Regenerate the illustrations
-
-The route illustration needs only JavaScript dependencies:
-
-```sh
-node scripts/plot-flight-path.mjs
-```
-
-It writes `outputs/flight-path.svg` from the actual flight-target controller. It does not include model geometry.
-
-With the model prepared, create a component inspection image:
+1. Download the STL from [Biocraftlab’s Elder Fire Dragon](https://www.printables.com/model/1385888-elder-fire-dragon-flexi-toy-figure). Keep the raw file outside `public/`.
+2. Install the pinned preparation tools in a Python environment:
 
 ```sh
-python scripts/inspect-dragon.py
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-model.txt
+python scripts/prepare-elder-fire.py /path/to/elder-fire.stl
 ```
 
-This writes `outputs/dragon-parts.png`. The generated model illustration is kept local and ignored by Git.
+On Windows, activate with `.venv\Scripts\Activate.ps1`. The pinned tool versions were validated with Python 3.14.
+
+The script requires source SHA-256 `806fe02ccc02b2fcd39822e8e42cab209b01781f5d306517b64b8ea5c04f4280`. It simplifies each of 86 shells separately, assigns them to seven bodies, and exports centred meshes and contact proxies to `public/models/elder-fire/`. The default budget produces 120,106 triangles in 6,005,888 bytes of STL geometry. The existing licence notice remains in that directory. A different source revision needs its grouping reviewed; do not bypass the hash guard.
+
+The source and adaptation are [CC BY-NC-SA 4.0](../public/models/elder-fire/LICENSE.md). Preserve the attribution and identify further changes. After regenerating, run the tests and inspect the moving model: numerical stability alone does not prove decorative parts are grouped correctly.
+
+## Other reproduction tools
+
+`node scripts/plot-flight-path.mjs` regenerates `outputs/flight-path.svg` without loading a model.
+
+`prepare-dragon.py`, `inspect-dragon.py`, and `requirements.txt` are retained as historical preparation tools for the original video model. They do not produce the assets loaded by the current playground. The original model is not redistributed; see [attribution](attribution.md).
+
+To build both video players and the interactive page, use [the Pages build instructions](publishing.md).

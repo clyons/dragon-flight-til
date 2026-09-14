@@ -1,5 +1,7 @@
 # Feature tour
 
+[Play the current Elder Fire playground](https://clyons.github.io/dragon-flight-til/play/). The recordings below show the earlier jars_2003 model; see [attribution](attribution.md).
+
 [Watch portrait](https://clyons.github.io/dragon-flight-til/) · [Watch widescreen](https://clyons.github.io/dragon-flight-til/widescreen.html) · [Download MP4](../outputs/dragon-feature-tour.mp4)
 
 Both editions: 31.4 seconds · H.264 · 30 fps · no audio. Portrait: 1080 × 1350 (4:5). Widescreen: 1920 × 906.
@@ -25,7 +27,7 @@ The throw moves the existing grab handle through a short wind-up and a fast upwa
 
 ## Recreate the recording
 
-Use a separate local clone for the recording setup, and first follow [reproduction](reproduction.md) to install dependencies and prepare your own model assets. The recording sources are in [work/recording](../work/recording/).
+Use a separate local clone for this historical recording setup. Install the JavaScript dependencies with `npm ci`, obtain the original jars_2003 model under its own terms, place it at `public/models/dragon.stl`, and run `scripts/prepare-dragon.py` using `requirements.txt`. The recorder below expects that original manifest and geometry; it does not use the included Elder Fire assets. The recording sources are in [work/recording](../work/recording/).
 
 From that clone's root:
 

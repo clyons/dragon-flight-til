@@ -1,12 +1,12 @@
 # How it works
 
-## Preserve the model; simplify the collision shapes
+## Simplify and group the printed model
 
-The reference STL has 61,096 triangles and nine disconnected components: seven body sections and two eyes. [prepare-dragon.py](../scripts/prepare-dragon.py) groups the eyes with the head and exports seven centred meshes, retaining every triangle. Coordinates change from Z-up to Y-up and are scaled by 0.18. The script's component order, anchors, and coordinate offsets are specific to this model.
+Biocraftlab’s Elder Fire STL contains 1,285,002 triangles in 86 disconnected shells. [prepare-elder-fire.py](../scripts/prepare-elder-fire.py) verifies the source hash, simplifies each shell separately, and groups ten axial sections and their decorations into seven centred meshes. The result retains 120,106 triangles across about 6 MB of STL files. Coordinates change from Z-up to Y-up and are scaled by 0.052. The component mapping, anchors, and offsets are specific to this model.
 
-The rigid sections are head, shoulders, wings and torso, hind legs, tail base, tail middle, and tail tip. Six spherical joints join them. The neck permits roughly ±69° of twist and a 66° swing cone; its local twist axis is aligned with world up in the initial pose.
+The rigid groups are head, shoulders and wings, torso, hind legs, tail base, tail middle, and tail tip. Wings stay fixed in their printed pose, avoiding a new wing rig. Six spherical joints join them. The neck permits roughly ±69° of twist and a 66° swing cone; its local twist axis is aligned with world up in the initial pose.
 
-Rendered meshes and collision shapes serve different purposes. Compact convex proxies handle ground contact. Additional zero-density compound hulls enclose the head and the feet so those parts can collide without adding mass. Collision masks disable other self-collision pairs so the printed interlocking joints do not jam.
+Rendered meshes and collision shapes serve different purposes. Compact convex proxies handle ground contact. Separate zero-density wing hulls provide floor contact without giving the broad wings an oversized torso mass. Additional zero-density compound hulls enclose the head and the feet so those parts can collide without adding mass. Collision masks disable other self-collision pairs so the printed interlocking joints do not jam.
 
 ## Head-led flight
 
@@ -37,7 +37,7 @@ After five seconds without steering, the autopilot starts a new circuit oriented
 
 ## Grabbing, landing, and time
 
-Grabbing creates a temporary kinematic body and a 5 Hz damped distance spring to the local point that was clicked. The pointer moves on a camera-facing plane. Handle speed is capped at 30 units per second and spring force is bounded. Targets use world coordinates, allowing grabs far from the starting circle. Release removes the joint without zeroing velocity.
+Grabbing creates a temporary kinematic body and a damped distance spring (5 Hz for heavier sections, rising to at most 14 Hz for the light tail) to the local point that was clicked. The pointer moves on a camera-facing plane. Handle speed is capped at 30 units per second and spring force is bounded. Targets use world coordinates, allowing grabs far from the starting circle. Release removes the joint without zeroing velocity.
 
 The application accumulates time into fixed 1/60-second steps. Each step runs two controller/collision updates, or four while grabbing, with six Box3D solver substeps per update. A hidden tab does not accumulate catch-up time.
 
@@ -52,7 +52,7 @@ Reset fades the canvas out, resets physics and camera while hidden, then fades b
 ## Limits
 
 - This is tuned procedural flight, not aerodynamics. Lift, reduced gravity, and orientation assistance are deliberate artistic controls.
-- The wings are connected to the torso in the source mesh and cannot flap independently.
+- The wings are deliberately grouped with the shoulders; this adaptation does not animate their printed joints.
 - Collision hulls approximate surfaces; head/foot collision is targeted, not complete mesh-to-mesh self-collision.
 - Preparation is specific to the reference STL. An arbitrary dragon file will need different component mapping and anchors.
 - WebGL2 and WebAssembly SIMD are required. The single-threaded WASM build needs no cross-origin isolation headers.

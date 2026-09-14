@@ -56,6 +56,14 @@ export async function createSimulation(manifest) {
         },
       })
       .delete();
+    for (const points of part.floorHulls ?? []) {
+      body.createHull({
+        points: points.map(vec), maxVertices: 32, density: 0,
+        friction: 0.6, restitution: 0.28, enableHitEvents: true,
+        userData: 100 + index,
+        filter: { categoryBits: BODY, maskBits: FLOOR },
+      }).delete();
+    }
     for (const points of part.headContactHulls ?? []) {
       body
         .createHull({
@@ -200,7 +208,8 @@ export async function createSimulation(manifest) {
       anchorB: localPoint,
       length: 0.03,
       enableSpring: true,
-      hertz: 5,
+      // A light tail tip still needs enough spring stiffness to lift the body.
+      hertz: Math.min(14, Math.max(5, 5 * Math.sqrt(totalMass / bodies.length / body.getMass()))),
       dampingRatio: 0.9,
       lowerSpringForce: -totalMass * 300,
       upperSpringForce: totalMass * 300,
