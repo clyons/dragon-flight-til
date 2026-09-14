@@ -2,7 +2,7 @@
 
 A Three.js playground that brings an articulated print model to life with Box3D physics. Steer the dragon through climbing turns and low swoops, watch the tail trail behind, or grab a section and give it a shake.
 
-[![Watch the 71-second portrait demo](outputs/dragon-poster.jpg)](https://clyons.github.io/dragon-flight-til/)
+[![Watch the 71-second portrait demo](outputs/dragon-poster.jpg?v=opening)](https://clyons.github.io/dragon-flight-til/)
 
 **[Watch the demo](https://clyons.github.io/dragon-flight-til/)** · [Widescreen version](https://clyons.github.io/dragon-flight-til/widescreen.html) · [Download the portrait MP4](outputs/dragon-feature-tour.mp4) · [Video chapters and recording method](docs/demo.md)
 
